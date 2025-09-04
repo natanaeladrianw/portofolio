@@ -105,6 +105,16 @@ export default {
         },
       ]
     };
+  },
+  methods: {
+    downloadCV() {
+      const link = document.createElement('a');
+      link.href = '/Nathanael Adrian Wirawan - CV.pdf';
+      link.download = 'Nathanael Adrian Wirawan - CV.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   }
 }
 </script>
@@ -134,6 +144,14 @@ export default {
           <p class="mb-3 fadein-left fadeins-2">
             &nbsp; &nbsp; &nbsp; {{ i18n.t ? i18n.t('about_me_paragraph2') : 'My focus is to develop applications and websites that are user-friendly, responsive, and tailored to the client\'s needs. I also pay attention to design and usability, ensuring that every project delivers both value and satisfaction. My goal is to help businesses and individuals convey their message effectively through technology. If you are interested in collaborating with me, please feel free to reach out through the contact listed.' }}
           </p>
+          <div class="mt-4 fadein-left fadeins-3">
+            <button @click="downloadCV" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              {{ i18n.t ? i18n.t('download_cv') : 'Download CV' }}
+            </button>
+          </div>
         </div>
       </section>
 
