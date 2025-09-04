@@ -110,7 +110,7 @@ export default {
           tech_enthusiast: 'Tech Enthusiast',
           web_developer: 'Web Developer',
           full_stack_engineer: 'Full-stack Engineer',
-          informatics_student: 'Informatics Student',
+          business_informatics_student: 'Business Information Systems Student',
           about_me_paragraph1: 'Hi everyone! My name is Nathanael Adrian Wirawan. I am a web and mobile developer with experience in building applications using technologies such as HTML, CSS, JavaScript, PHP, Laravel, Vue.js, Python, Kotlin, and Java. I am passionate about creating digital solutions that are not only functional but also efficient and visually appealing. For me, programming is not just a skill, but also a form of creativity that brings ideas to life.',
           about_me_paragraph2: 'My focus is to develop applications and websites that are user-friendly, responsive, and tailored to the client\'s needs. I also pay attention to design and usability, ensuring that every project delivers both value and satisfaction. My goal is to help businesses and individuals convey their message effectively through technology. If you are interested in collaborating with me, please feel free to reach out through the contact listed.',
           advanced: 'Advanced',
@@ -141,7 +141,9 @@ export default {
           laravel_cert_title: 'Laravel Staff Internship Certificate',
           laravel_cert_desc: 'Internship at Lokpro Media as a Laravel Staff with a focus on developing web applications using the Laravel framework and modern backend technologies.',
           laravel_cert_date: 'September - December 2024',
-          laravel_cert_category: 'Internship'
+          laravel_cert_category: 'Internship',
+          months: 'Months',
+          '4_months': '4 Months'
         },
         id: {
           home: 'Beranda',
@@ -161,7 +163,7 @@ export default {
           tech_enthusiast: 'Penggemar Teknologi',
           web_developer: 'Pengembang Web',
           full_stack_engineer: 'Engineer Full‑stack',
-          informatics_student: 'Mahasiswa Informatika',
+          business_informatics_student: 'Mahasiswa Sistem Informasi Bisnis',
           about_me_paragraph1: 'Halo semuanya! Nama saya Nathanael Adrian Wirawan. Saya adalah seorang pengembang web dan mobile dengan pengalaman dalam membangun aplikasi menggunakan teknologi seperti HTML, CSS, JavaScript, PHP, Laravel, Vue.js, Python, Kotlin, dan Java. Saya sangat antusias dalam menciptakan solusi digital yang tidak hanya fungsional tetapi juga efisien dan menarik secara visual. Bagi saya, pemrograman bukan hanya sebuah keterampilan, tetapi juga bentuk kreativitas yang menghidupkan ide-ide.',
           about_me_paragraph2: 'Fokus saya adalah mengembangkan aplikasi dan website yang ramah pengguna, responsif, dan disesuaikan dengan kebutuhan klien. Saya juga memperhatikan desain dan kegunaan, memastikan bahwa setiap proyek memberikan nilai dan kepuasan. Tujuan saya adalah membantu bisnis dan individu menyampaikan pesan mereka secara efektif melalui teknologi. Jika Anda tertarik untuk berkolaborasi dengan saya, silakan hubungi melalui kontak yang tertera.',
           advanced: 'Mahir',
@@ -192,7 +194,9 @@ export default {
           laravel_cert_title: 'Sertifikat Magang Staff Laravel',
           laravel_cert_desc: 'Magang di Lokpro Media sebagai Staff Laravel dengan fokus mengembangkan aplikasi web menggunakan framework Laravel dan teknologi backend modern.',
           laravel_cert_date: 'September - Desember 2024',
-          laravel_cert_category: 'Magang'
+          laravel_cert_category: 'Magang',
+          months: 'Bulan',
+          '4_months': '4 Bulan'
         }
       }
     }

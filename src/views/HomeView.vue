@@ -48,7 +48,7 @@ export default {
       this.toRotate = [
         t('web_developer'),
         t('full_stack_engineer'),
-        t('informatics_student'),
+        t('business_informatics_student'),
         t('tech_enthusiast')
       ];
       this.loopNum = 0;

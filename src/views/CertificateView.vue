@@ -35,7 +35,7 @@
                 </div>
                 <div class="w-full text-left text-[10px] text-gray-600 dark:text-white md:text-xs lg:text-sm">
                   <p><strong>{{ i18n.t ? i18n.t('issuer') : 'Issuer' }}:</strong> {{ certificate.issuer }}</p>
-                  <p v-if="certificate.duration"><strong>{{ i18n.t ? i18n.t('duration') : 'Duration' }}:</strong> {{ certificate.duration }}</p>
+                  <p v-if="certificate.durationKey"><strong>{{ i18n.t ? i18n.t('duration') : 'Duration' }}:</strong> {{ i18n.t ? i18n.t(certificate.durationKey) : certificate.durationKey }}</p>
                 </div>
                 <div v-if="certificate.image" class="mt-3">
                   <button @click="viewCertificate(certificate)" 
@@ -151,7 +151,7 @@ export default {
           dateKey: "laravel_cert_date",
           categoryKey: "laravel_cert_category",
           issuer: "LOKPRO MEDIA",
-          duration: "4 Months",
+          durationKey: "4_months",
           skills: ["Laravel", "PHP", "MySQL", "Web Development"],
           image: "certificate-magang_lokpro.jpg"
         }

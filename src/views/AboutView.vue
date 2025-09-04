@@ -108,12 +108,113 @@ export default {
   },
   methods: {
     downloadCV() {
-      const link = document.createElement('a');
-      link.href = '/Nathanael Adrian Wirawan - CV.pdf';
-      link.download = 'Nathanael Adrian Wirawan - CV.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      try {
+        // Show loading state
+        const button = event.target.closest('button');
+        const originalText = button.innerHTML;
+        button.innerHTML = '<svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Mengunduh...';
+        button.disabled = true;
+
+        // Gunakan metode sederhana untuk menghindari konflik dengan IDM
+        const link = document.createElement('a');
+        link.href = '/cv.pdf';
+        link.download = 'Nathanael Adrian Wirawan - CV.pdf';
+        link.style.display = 'none';
+        
+        // Tambahkan atribut untuk memastikan nama file yang benar
+        link.setAttribute('download', 'Nathanael Adrian Wirawan - CV.pdf');
+        
+        // Untuk perangkat mobile, buka di tab baru
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+        }
+        
+        // Tambahkan ke body dan klik
+        document.body.appendChild(link);
+        link.click();
+        
+        // Hapus link setelah klik
+        setTimeout(() => {
+          document.body.removeChild(link);
+        }, 100);
+        
+        // Reset button state
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.disabled = false;
+          this.showMessage('CV berhasil diunduh!', 'success');
+        }, 1000);
+        
+      } catch (error) {
+        console.error('Unduhan gagal:', error);
+        
+        // Reset button state
+        const button = event.target.closest('button');
+        button.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> ' + (this.i18n.t ? this.i18n.t('download_cv') : 'Download CV');
+        button.disabled = false;
+        
+        this.showMessage('Gagal mengunduh CV. Silakan coba lagi.', 'error');
+      }
+    },
+    
+    showMessage(message, type = 'info') {
+      // Buat notifikasi card di tengah layar
+      const toast = document.createElement('div');
+      toast.className = `fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 transition-all duration-300 ${
+        type === 'success' ? 'bg-white dark:bg-gray-800 border border-green-200 dark:border-green-700' : 
+        type === 'error' ? 'bg-white dark:bg-gray-800 border border-red-200 dark:border-red-700' : 
+        'bg-white dark:bg-gray-800 border border-blue-200 dark:border-blue-700'
+      }`;
+      
+      // Buat struktur card dengan icon dan teks
+      toast.innerHTML = `
+        <div class="flex items-center gap-4 px-6 py-4 rounded-xl shadow-2xl min-w-[300px]">
+          <div class="flex-shrink-0">
+            ${type === 'success' ? `
+              <div class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+            ` : type === 'error' ? `
+              <div class="w-10 h-10 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </div>
+            ` : `
+              <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            `}
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-medium ${
+              type === 'success' ? 'text-green-800 dark:text-green-200' : 
+              type === 'error' ? 'text-red-800 dark:text-red-200' : 
+              'text-blue-800 dark:text-blue-200'
+            }">
+              ${message}
+            </p>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(toast);
+      
+      // Hapus otomatis setelah 3 detik
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translate(-50%, -50%) scale(0.8)';
+        setTimeout(() => {
+          if (document.body.contains(toast)) {
+            document.body.removeChild(toast);
+          }
+        }, 300);
+      }, 3000);
     }
   }
 }
@@ -263,5 +364,19 @@ export default {
 
 .item-tech:hover .status-tech {
   opacity: 1;
+}
+
+/* Loading animation for download button */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 </style>
