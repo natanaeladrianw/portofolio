@@ -337,24 +337,33 @@ body.modal-open {
 }
 
 /* Accordion transition for mobile dropdown */
-.accordion-enter-active, .accordion-leave-active {
-  transition: max-height 450ms cubic-bezier(0.22, 1, 0.36, 1),
-              opacity 450ms ease,
-              transform 450ms cubic-bezier(0.22, 1, 0.36, 1),
-              filter 450ms ease;
-  will-change: max-height, opacity, transform;
+.accordion-enter-active {
+  transition: all 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  overflow: hidden;
 }
-.accordion-enter-from, .accordion-leave-to {
+.accordion-leave-active {
+  transition: all 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  overflow: hidden;
+}
+.accordion-enter-from {
   max-height: 0;
   opacity: 0;
-  transform: translateY(-6px) scale(0.98);
-  filter: blur(6px);
+  transform: translateY(-12px);
 }
-.accordion-enter-to, .accordion-leave-from {
-  max-height: 1000px;
+.accordion-enter-to {
+  max-height: 500px;
   opacity: 1;
-  transform: translateY(0) scale(1);
-  filter: blur(0);
+  transform: translateY(0);
+}
+.accordion-leave-from {
+  max-height: 500px;
+  opacity: 1;
+  transform: translateY(0);
+}
+.accordion-leave-to {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-12px);
 }
 .accordion-content {
   overflow: hidden;
