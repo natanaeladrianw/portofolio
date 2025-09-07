@@ -215,34 +215,43 @@ svg:hover{
 
 /* Accordion transition for mobile dropdown (smoother) */
 .accordion-enter-active {
-  transition: all 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
 .accordion-leave-active {
-  transition: all 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
 .accordion-enter-from {
   max-height: 0;
   opacity: 0;
-  transform: translateY(-12px);
+  transform: translateY(-8px);
+  padding-top: 0;
+  padding-bottom: 0;
 }
 .accordion-enter-to {
-  max-height: 500px;
+  max-height: 600px;
   opacity: 1;
   transform: translateY(0);
+  padding-top: 0;
+  padding-bottom: 1rem;
 }
 .accordion-leave-from {
-  max-height: 500px;
+  max-height: 600px;
   opacity: 1;
   transform: translateY(0);
+  padding-top: 0;
+  padding-bottom: 1rem;
 }
 .accordion-leave-to {
   max-height: 0;
   opacity: 0;
-  transform: translateY(-12px);
+  transform: translateY(-8px);
+  padding-top: 0;
+  padding-bottom: 0;
 }
 .accordion-content {
   overflow: hidden;
+  will-change: max-height, opacity, transform;
 }
 </style>
