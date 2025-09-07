@@ -8,6 +8,7 @@ export default {
       galleryImages: [],
       galleryTitle: '',
       currentImageIndex: 0,
+      expandedItemId: null,
       galleryMap: {
         2: [
           'program dilan 1.jpg',
@@ -34,9 +35,24 @@ export default {
           statusKey: 'cafe_system_desc',
           tech: 'Laravel 10, Bootstrap, MySQL, JavaScript',
           github: 'https://github.com/natanaeladrianw/dindinglangit'
+        },
+        {
+          id: 3,
+          nameKey: 'umkm_landing_page_name',
+          imageUrl: 'umkm-landing-page',
+          statusKey: 'umkm_landing_page_desc',
+          tech: 'ExpressJS, ReactJS',
+          github: 'https://github.com/natanaeladrianw/web-umkm',
+          demo: 'https://umkm-landing-page.netlify.app/'
         }
       ]
     };
+  },
+  mounted() {
+    document.addEventListener('click', this.handleDocumentClick, true);
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.handleDocumentClick, true);
   },
   methods: {
     fallbackToJpg(event, base) {
@@ -44,6 +60,18 @@ export default {
       if (img && !img.dataset.fallbackTried) {
         img.dataset.fallbackTried = 'true';
         img.src = `/img/${base}.jpg`;
+      }
+    },
+    toggleExpand(itemId) {
+      this.expandedItemId = this.expandedItemId === itemId ? null : itemId;
+    },
+    handleDocumentClick(event) {
+      if (this.expandedItemId === null) return;
+      const target = event.target;
+      const closestAcc = target.closest('[data-acc-id]');
+      const current = document.querySelector(`[data-acc-id="${this.expandedItemId}"]`);
+      if (!closestAcc || closestAcc !== current) {
+        this.expandedItemId = null;
       }
     },
     openGallery(item) {
@@ -84,47 +112,55 @@ export default {
       </header>
       <section>
         <div>
-          <div class="grid grid-cols-1 gap-4 pb-32 md:grid-cols-3 md:gap-3 xl:grid-cols-3 xl:gap-3 2xl:gap-5 fade-zoom-in">
+          <div class="md:hidden flex flex-col gap-3 pb-12" @click.stop>
+            <div v-for="item in items" :key="item.id" class="border border-blue-400 rounded-xl overflow-hidden bg-white dark:bg-gray-800" :data-acc-id="item.id">
+              <button @click="toggleExpand(item.id)" class="w-full flex items-center justify-between px-4 py-3 text-left text-blue-600 dark:text-blue-400 transition-colors">
+                <span class="font-medium">{{ i18n.t ? i18n.t(item.nameKey) : item.nameKey }}</span>
+                <svg :class="['transition-transform', expandedItemId === item.id ? 'rotate-180' : '']" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <transition name="accordion">
+                <div v-if="expandedItemId === item.id" class="accordion-content px-4 pb-4 pt-0 text-sm md:text-base lg:text-lg text-black dark:text-gray-100">
+                  <div class="w-full flex items-center justify-center">
+                    <img :alt="i18n.t ? i18n.t(item.nameKey) : item.nameKey" loading="lazy" decoding="async" data-nimg="1" :class="['drop-shadow-xl rounded-xl w-full h-44 object-contain mt-2', item.id === 2 ? 'dark:invert dark:brightness-200' : '']" :src="'/img/' + item.imageUrl + '.png'" @error="fallbackToJpg($event, item.imageUrl)">
+                  </div>
+                  <div class="mt-3 text-[12px] text-gray-600 dark:text-gray-300">{{ i18n.t ? i18n.t(item.statusKey) : item.statusKey }}</div>
+                  <div class="mt-2 text-blue-600 dark:text-blue-400">{{ item.tech }}</div>
+                  <div class="mt-3 flex items-center gap-3">
+                    <a v-if="item.github !== 'null'" :href="item.github" target="_blank" rel="noreferrer" title="View github repository" class="transition-all hover:text-blue-600">
+                      <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                    </a>
+                    <a v-if="item.id !== 2 && item.demo !== 'null'" :href="item.demo" target="_blank" rel="noreferrer" title="View finished project" class="transition-all hover:text-blue-600">
+                      <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                    </a>
+                    <button v-if="galleryMap[item.id] && galleryMap[item.id].length" @click="openGallery(item)" class="ml-auto px-3 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors">{{ i18n.t ? i18n.t('view_gallery') : 'View' }}</button>
+                  </div>
+                </div>
+              </transition>
+            </div>
+          </div>
+          <div class="hidden md:grid grid-cols-1 gap-4 pb-32 md:grid-cols-3 md:gap-3 xl:grid-cols-3 xl:gap-3 2xl:gap-5 fade-zoom-in">
             <div v-for="item in items" :key="item.id" class="h-full">
-              <div
-                class="item-card h-full flex flex-col items-center gap-2 rounded bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border border-blue-400 dark:border-blue-400 rounded-xl text-black dark:text-gray-100 md:gap-3 px-5 py-5 lg:px-5 shadow-sm hover:shadow-md transition-shadow ">
+              <div class="item-card h-full flex flex-col items-center gap-2 rounded bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border border-blue-400 dark:border-blue-400 rounded-xl text-black dark:text-gray-100 md:gap-3 px-5 py-5 lg:px-5 shadow-sm hover:shadow-md transition-shadow ">
                 <div class="flex items-center justify-center p-0 w-full lg:p-0 zoom-in">
-                  <img :alt="i18n.t ? i18n.t(item.nameKey) : item.nameKey" loading="lazy" decoding="async" data-nimg="1" :class="['drop-shadow-xl rounded rounded-xl w-full h-48 object-contain', item.id === 2 ? 'dark:invert dark:brightness-200' : '']"
-                    :src="'/img/' + item.imageUrl + '.png'" @error="fallbackToJpg($event, item.imageUrl)">
+                  <img :alt="i18n.t ? i18n.t(item.nameKey) : item.nameKey" loading="lazy" decoding="async" data-nimg="1" :class="['drop-shadow-xl rounded rounded-xl w-full h-48 object-contain', item.id === 2 ? 'dark:invert dark:brightness-200' : '']" :src="'/img/' + item.imageUrl + '.png'" @error="fallbackToJpg($event, item.imageUrl)">
                 </div>
                 <div class="w-full flex-1 flex flex-col gap-2 items-center text-sm md:text-base lg:text-lg">
-                  <div class="title-text font-medium text-blue-600 dark:text-blue-400">{{ i18n.t ? i18n.t(item.nameKey) : item.nameKey }}
-                  </div>
-                  <div class="w-full text-left text-[10px] text-gray-600 dark:text-gray-300 md:text-xs lg:text-sm">
-                    {{ i18n.t ? i18n.t(item.statusKey) : item.statusKey }}</div>
-                  <div class="w-full mt-4 text-normal text-sm text-left text-blue-600 dark:text-blue-400">
-                    {{ item.tech }}
-                  </div>
+                  <div class="title-text font-medium text-blue-600 dark:text-blue-400">{{ i18n.t ? i18n.t(item.nameKey) : item.nameKey }}</div>
+                  <div class="w-full text-left text-[10px] text-gray-600 dark:text-gray-300 md:text-xs lg:text-sm">{{ i18n.t ? i18n.t(item.statusKey) : item.statusKey }}</div>
+                  <div class="w-full mt-4 text-normal text-sm text-left text-blue-600 dark:text-blue-400">{{ item.tech }}</div>
                   <div class="w-full mt-2 flex justify-start" v-if="galleryMap[item.id] && galleryMap[item.id].length">
                     <button @click="openGallery(item)" class="px-3 py-1 text-xs md:text-sm rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors">{{ i18n.t ? i18n.t('view_gallery') : 'View' }}</button>
                   </div>
                   <div class="w-full flex justify-end mt-auto">
                     <div class="flex cursor-pointer items-end gap-2 text-primary">
-                      <a v-if="item.github !== 'null'"
-                        :href="item.github" target="_blank" rel="noreferrer"
-                        title="View github repository" class="transition-all hover:text-blue-600">
-                        <svg stroke="currentColor"
-                          fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"
-                          height="16" width="16" xmlns="http://www.w3.org/2000/svg">
-                          <path
-                            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
-                          </path>
-                        </svg></a>
-                        <a v-if="item.id !== 2 && item.demo !== 'null'" :href="item.demo" target="_blank" rel="noreferrer"
-                        title="View finished project" class="transition-all hover:text-blue-600">
-                        <svg stroke="currentColor"
-                          fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"
-                          height="18" width="18" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                          <polyline points="15 3 21 3 21 9"></polyline>
-                        <line x1="10" y1="14" x2="21" y2="3"></line>
-                      </svg></a></div>
-                </div>
+                      <a v-if="item.github !== 'null'" :href="item.github" target="_blank" rel="noreferrer" title="View github repository" class="transition-all hover:text-blue-600">
+                        <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                      </a>
+                      <a v-if="item.id !== 2 && item.demo !== 'null'" :href="item.demo" target="_blank" rel="noreferrer" title="View finished project" class="transition-all hover:text-blue-600">
+                        <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                      </a>
+                    </div>
+                  </div>
               </div>
             </div>
           </div>
@@ -175,5 +211,29 @@ svg:hover{
 /* Menggunakan animasi pada elemen yang diinginkan */
 .fade-zoom-in {
   animation: fadeZoomIn 1s ease-in-out;
+}
+
+/* Accordion transition for mobile dropdown (smoother) */
+.accordion-enter-active, .accordion-leave-active {
+  transition: max-height 450ms cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 450ms ease,
+              transform 450ms cubic-bezier(0.22, 1, 0.36, 1),
+              filter 450ms ease;
+  will-change: max-height, opacity, transform;
+}
+.accordion-enter-from, .accordion-leave-to {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+  filter: blur(6px);
+}
+.accordion-enter-to, .accordion-leave-from {
+  max-height: 1000px; /* enough for content */
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+.accordion-content {
+  overflow: hidden;
 }
 </style>

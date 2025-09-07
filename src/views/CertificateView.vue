@@ -12,44 +12,63 @@
       <section>
         <div class="flex flex-col-reverse md:flex-row relative">
           <div class="w-full md:w-2/3">
-            <div class="grid grid-cols-1 gap-4 pb-32 md:grid-cols-1 md:gap-3 xl:grid-cols-1 xl:gap-3 2xl:gap-5 fade-zoom-in">
-          <div v-for="certificate in filteredCertificates" :key="certificate.id" 
-               class="item-card flex flex-col items-center gap-2 rounded bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border border-blue-400 dark:border-blue-400 rounded-xl text-black dark:text-gray-100 md:gap-3 px-5 py-5 lg:px-5">
+            <!-- Mobile: Accordion list -->
+            <div class="md:hidden flex flex-col gap-3 pb-8">
+              <div v-for="certificate in filteredCertificates" :key="certificate.id" class="border border-blue-400 rounded-xl overflow-hidden bg-white dark:bg-gray-800" :data-cert-acc-id="certificate.id">
+                <button @click="toggleCertificate(certificate.id)" class="w-full flex items-center justify-between px-4 py-3 text-left text-blue-600 dark:text-blue-400 transition-colors">
+                  <span class="font-medium">{{ i18n.t ? i18n.t(certificate.titleKey) : certificate.titleKey }}</span>
+                  <svg :class="['transition-transform', expandedCertId === certificate.id ? 'rotate-180' : '']" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <transition name="accordion">
+                  <div v-if="expandedCertId === certificate.id" class="accordion-content px-4 pb-4 pt-0 text-sm text-black dark:text-gray-100">
+                    <div class="flex items-center gap-2 mt-3">
+                      <span class="text-xs text-gray-600 dark:text-white italic">{{ i18n.t ? i18n.t(certificate.dateKey) : certificate.dateKey }}</span>
+                      <span class="px-3 py-1 rounded-full text-xs font-medium" :class="getCategoryClass(i18n.t ? i18n.t(certificate.categoryKey) : certificate.categoryKey)">{{ i18n.t ? i18n.t(certificate.categoryKey) : certificate.categoryKey }}</span>
+                    </div>
+                    <div class="mt-2 text-[12px] text-gray-600 dark:text-white">{{ i18n.t ? i18n.t(certificate.descriptionKey) : certificate.descriptionKey }}</div>
+                    <div class="flex flex-wrap gap-2 mt-2">
+                      <span v-for="skill in certificate.skills" :key="skill" class="px-3 py-1 rounded-full bg-blue-100 text-blue-600 text-xs">{{ skill }}</span>
+                    </div>
+                    <div class="w-full text-left text-[12px] text-gray-600 dark:text-white mt-2">
+                      <p><strong>{{ i18n.t ? i18n.t('issuer') : 'Issuer' }}:</strong> {{ certificate.issuer }}</p>
+                      <p v-if="certificate.durationKey"><strong>{{ i18n.t ? i18n.t('duration') : 'Duration' }}:</strong> {{ i18n.t ? i18n.t(certificate.durationKey) : certificate.durationKey }}</p>
+                    </div>
+                    <div v-if="certificate.image" class="mt-3">
+                      <button @click="viewCertificate(certificate)" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 text-xs font-medium">👁️ {{ i18n.t ? i18n.t('view_certificate') : 'View Certificate' }}</button>
+                    </div>
+                  </div>
+                </transition>
+              </div>
+            </div>
+
+            <!-- Desktop and up: existing grid -->
+            <div class="hidden md:grid grid-cols-1 gap-4 pb-32 md:grid-cols-1 md:gap-3 xl:grid-cols-1 xl:gap-3 2xl:gap-5 fade-zoom-in">
+              <div v-for="certificate in filteredCertificates" :key="certificate.id" class="item-card flex flex-col items-center gap-2 rounded bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border border-blue-400 dark:border-blue-400 rounded-xl text-black dark:text-gray-100 md:gap-3 px-5 py-5 lg:px-5">
             <div class="flex flex-col md:flex-row items-start gap-4 md:gap-6 w-full">
               <div class="w-full md:w-2/3">
                 <div class="flex items-center gap-2 mb-3">
                   <div class="h-[1px] w-16 bg-blue-400 md:w-8 aos-init aos-animate mr-2"></div>
                   <span class="text-xs text-gray-600 dark:text-white italic">{{ i18n.t ? i18n.t(certificate.dateKey) : certificate.dateKey }}</span>
-                  <span class="px-3 py-1 rounded-full text-xs font-medium" 
-                        :class="getCategoryClass(i18n.t ? i18n.t(certificate.categoryKey) : certificate.categoryKey)">
-                    {{ i18n.t ? i18n.t(certificate.categoryKey) : certificate.categoryKey }}
-                  </span>
+                      <span class="px-3 py-1 rounded-full text-xs font-medium" :class="getCategoryClass(i18n.t ? i18n.t(certificate.categoryKey) : certificate.categoryKey)">{{ i18n.t ? i18n.t(certificate.categoryKey) : certificate.categoryKey }}</span>
                 </div>
                 <div class="title-text font-medium text-blue-600 text-sm md:text-base lg:text-lg mb-2">{{ i18n.t ? i18n.t(certificate.titleKey) : certificate.titleKey }}</div>
                 <div class="w-full text-left text-[10px] text-gray-600 dark:text-white md:text-xs lg:text-sm mb-3">{{ i18n.t ? i18n.t(certificate.descriptionKey) : certificate.descriptionKey }}</div>
                 <div class="flex flex-wrap gap-2 mb-3">
-                  <span v-for="skill in certificate.skills" :key="skill" 
-                        class="px-3 py-1 rounded-full bg-blue-100 text-blue-600 text-xs">
-                    {{ skill }}
-                  </span>
+                      <span v-for="skill in certificate.skills" :key="skill" class="px-3 py-1 rounded-full bg-blue-100 text-blue-600 text-xs">{{ skill }}</span>
                 </div>
                 <div class="w-full text-left text-[10px] text-gray-600 dark:text-white md:text-xs lg:text-sm">
                   <p><strong>{{ i18n.t ? i18n.t('issuer') : 'Issuer' }}:</strong> {{ certificate.issuer }}</p>
                   <p v-if="certificate.durationKey"><strong>{{ i18n.t ? i18n.t('duration') : 'Duration' }}:</strong> {{ i18n.t ? i18n.t(certificate.durationKey) : certificate.durationKey }}</p>
                 </div>
                 <div v-if="certificate.image" class="mt-3">
-                  <button @click="viewCertificate(certificate)" 
-                          class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 text-xs font-medium">
-                    👁️ {{ i18n.t ? i18n.t('view_certificate') : 'View Certificate' }}
-                  </button>
+                      <button @click="viewCertificate(certificate)" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 text-xs font-medium">👁️ {{ i18n.t ? i18n.t('view_certificate') : 'View Certificate' }}</button>
                 </div>
               </div>
               <div class="w-full md:w-1/3 flex justify-center">
                 <div class="flex h-12 w-12 items-center justify-center p-0 h-full w-full lg:p-0 zoom-in">
-                  <img :src="'/img/' + certificate.image" :alt="i18n.t ? i18n.t(certificate.titleKey) : certificate.titleKey" 
-                       class="drop-shadow-xl rounded rounded-xl w-full h-full object-cover">
-                </div>
-              </div>
+                      <img :src="'/img/' + certificate.image" :alt="i18n.t ? i18n.t(certificate.titleKey) : certificate.titleKey" class="drop-shadow-xl rounded rounded-xl w-full h-full object-cover">
+                    </div>
+                  </div>
             </div>
           </div>
         </div>
@@ -163,11 +182,16 @@ export default {
         { name: "Certification", nameKey: "certification", originalName: "Certification", count: 0 }
       ],
       selectedCertificate: null,
-      activeFilter: "All"
+      activeFilter: "All",
+      expandedCertId: null
     }
   },
   mounted() {
     this.updateCategoryCounts();
+    document.addEventListener('click', this.handleCertificateOutsideClick, true);
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.handleCertificateOutsideClick, true);
   },
   computed: {
     filteredCertificates() {
@@ -182,6 +206,18 @@ export default {
     }
   },
   methods: {
+    handleCertificateOutsideClick(event) {
+      if (this.expandedCertId === null) return;
+      const target = event.target;
+      const closestAcc = target.closest('[data-cert-acc-id]');
+      const current = document.querySelector(`[data-cert-acc-id="${this.expandedCertId}"]`);
+      if (!closestAcc || closestAcc !== current) {
+        this.expandedCertId = null;
+      }
+    },
+    toggleCertificate(id) {
+      this.expandedCertId = this.expandedCertId === id ? null : id;
+    },
     getOriginalCategoryName(categoryKey) {
       const categoryMap = {
         'laravel_cert_category': 'Internship',
@@ -298,5 +334,29 @@ body.modal-open {
 
 .modal-content {
   z-index: 10000 !important;
+}
+
+/* Accordion transition for mobile dropdown */
+.accordion-enter-active, .accordion-leave-active {
+  transition: max-height 450ms cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 450ms ease,
+              transform 450ms cubic-bezier(0.22, 1, 0.36, 1),
+              filter 450ms ease;
+  will-change: max-height, opacity, transform;
+}
+.accordion-enter-from, .accordion-leave-to {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+  filter: blur(6px);
+}
+.accordion-enter-to, .accordion-leave-from {
+  max-height: 1000px;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+.accordion-content {
+  overflow: hidden;
 }
 </style>

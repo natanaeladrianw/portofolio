@@ -76,6 +76,18 @@ export default {
           name: 'SQL',
           imageUrl: 'https://cdn.iconscout.com/icon/free/png-256/free-mysql-3628940-3030165.png',
           statusKey: 'advanced'
+        },
+        {
+          id: 13,
+          name: 'ReactJS',
+          imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg',
+          statusKey: 'beginner'
+        },
+        {
+          id: 14,
+          name: 'ExpressJS',
+          imageUrl: 'https://cdn.iconscout.com/icon/free/png-256/free-express-8-1175029.png',
+          statusKey: 'beginner'
         }
       ],
       tools: [
@@ -221,7 +233,7 @@ export default {
 </script>
 <template>
   <div
-    class="bg-gray-800 px-5 py-5 md:px-12 md:py-10 text-left border border-blue-400 rounded-3xl text-amber-50 mx-3 mb-5">
+    class="bg-gray-800 px-5 py-5 md:px-12 md:py-10 text-left border border-blue-400 rounded-3xl text-amber-50 mx-3 mb-5 overflow-x-hidden">
     <article data-page="about">
 
       <header>
@@ -233,9 +245,9 @@ export default {
       </header>
 
       <section
-        class="text-sm md:text-lg text-justify flex flex-col gap-4 md:flex-row md:gap-8 md:justify-left md:items-center">
+        class="text-sm md:text-lg text-justify flex flex-col gap-4 md:flex-row md:gap-8 md:justify-left md:items-center overflow-x-hidden">
         <div class="flex justify-center">
-          <img class="w-9/12 rounded-full mb-3 fadein-up"
+          <img class="w-9/12 max-w-full h-auto rounded-full mb-3 fadein-up"
             src="/img/myfoto.jpg" alt="Foto">
         </div>
         <div class="md:w-7/12">
@@ -259,7 +271,7 @@ export default {
     </article>
   </div>
 
-  <div class="px-5 py-5 md:px-12 md:py-10 text-left text-amber-50 mx-3">
+  <div class="px-5 py-5 md:px-12 md:py-10 text-left text-amber-50 mx-3 overflow-x-hidden">
     <article data-page="about">
       <header>
         <div class="text-2xl font-bold text-black dark:text-white mb-5 fadein-bot title-section flex items-center">
@@ -282,7 +294,7 @@ export default {
           </ul>
         </div>
         <div v-show="activeTab === 1">
-          <div class="grid grid-cols-2 gap-4 pb-32 md:grid-cols-3 md:gap-8 xl:grid-cols-4 xl:gap-10 2xl:gap-12">
+          <div class="grid grid-cols-2 gap-4 pb-32 md:grid-cols-3 md:gap-8 xl:grid-cols-4 xl:gap-10 2xl:gap-12 overflow-x-hidden">
             <div v-for="item in tech" :key="item.id">
               <div
                 class="item-tech flex cursor-pointer items-center gap-2 rounded border border-blue-400 px-2 py-2 hover:bg-blue-400 hover:bg-opacity-10 md:gap-3 lg:px-3">
